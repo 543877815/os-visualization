@@ -123,8 +123,8 @@ const mutations = {
         for (let i = 0; i < resource_length; i++) {
             this.commit("release_resource", {
                 process: process,
-                rid: process.resources[0].rid,
-                release_status: process.resources[0].status
+                rid: process.resources[i].rid,
+                release_status: process.resources[i].status
             })
         }
 
@@ -133,7 +133,7 @@ const mutations = {
 
         // PCB 修改
         this.commit("delete", { pid: payload.pid })
-        console.log(payload.pid, process, process.status, payload.time)
+        // console.log(payload.pid, process, process.status, payload.time)
         // 根据状态查找对应的队列进行删除
         let process_status = process.status
         if (process_status == "running") {
@@ -145,7 +145,6 @@ const mutations = {
         }
 
         if (payload.time == 0) {
-            console.log("wwwww")
             this.commit("schedule")
         }
     },
