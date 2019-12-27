@@ -118,18 +118,21 @@ const mutations = {
         for (let i = 0; i < children_length; i++) {
             this.commit("delete_process", { pid: process.children[0].pid, time: 1 })
         }
+
+        // 将资源等待队列记录清除
+        this.commit("delete_waiting", { pid: payload.pid })
+
         // 将自己拥有的资源进行释放
         let resource_length = process.resources.length
+        // console.log(process.pid, resource_length)
         for (let i = 0; i < resource_length; i++) {
+            // console.log(process.resources)
             this.commit("release_resource", {
                 process: process,
                 rid: process.resources[i].rid,
                 release_status: process.resources[i].status
             })
         }
-
-        // 将资源等待队列记录清除
-        this.commit("delete_waiting", { pid: payload.pid })
 
         // PCB 修改
         this.commit("delete", { pid: payload.pid })
@@ -199,8 +202,9 @@ const mutations = {
         if (resources == undefined || resources.length == 0) { return }
         let resource = resources[0]
         let status_allocated = parseInt(resource.status)
+        console.log(payload.rid, status_allocated, release_status)
         // 如果已分配资源大于等于要求释放资源，则释放资源，并修改进程状态
-        if (status_allocated >= payload.release_status) {
+        if (status_allocated >= release_status) {
             this.commit("release", {
                 process: process,
                 rid: payload.rid,

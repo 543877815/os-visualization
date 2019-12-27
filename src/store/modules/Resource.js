@@ -147,6 +147,7 @@ const mutations = {
             let allocated_process = resource.allocated_list.filter(element => element.pid == payload.process.pid)
             if (allocated_process.length == 0) return
             let allocated_status = allocated_process[0].status
+            console.log("resource", allocated_status, allocated_process)
             // 如果释放资源大于该进程已分配资源
             if (payload.release_status > allocated_status) {
                 console.log("release failed, the release number exceeds the number of the resource this process requested!")
@@ -157,7 +158,10 @@ const mutations = {
                 if (allocated_status - payload.release_status == 0) {
                     let index = resource.allocated_list.findIndex(element => { return element.pid == payload.process.pid })
                     if (index == -1) return
+                    let temp = resource.allocated_list
+                    console.log(temp)
                     resource.allocated_list.splice(index, 1)
+                    console.log(resource.allocated_list)
                 } else {
                     let index = resource.allocated_list.findIndex(element => { return element.pid == payload.process.pid })
                     if (index == -1) return
